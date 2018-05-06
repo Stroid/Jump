@@ -15,6 +15,7 @@ Player player;
 ArrayList<Enemy> Enemies = new ArrayList();
 
 float score = 0;
+float max_score;
 float score_gain = .5; 
 
 void setup() {
@@ -29,9 +30,9 @@ void setup() {
 void draw() {
   background(bgColor);
   hud.display();
-  
+
   score += score_gain;
-  
+
   player.update();
   player.display();
 
@@ -55,7 +56,6 @@ void draw() {
     //Check if the player has collided with the enemy
     if (temp.collition()) {
       reset();
-      
     }
 
     //Display enemy
@@ -66,8 +66,11 @@ void draw() {
   line(0, height - horizon, width, height - horizon);
 }
 
-void reset(){
+void reset() {
   Enemies.clear();
+  if (score > max_score) {
+    max_score = score;
+  }
   score = 0;
 }
 
@@ -77,7 +80,8 @@ void keyPressed() {
   }
 }
 void spawn_enemy() {
-  Enemies.add(new Cactai());
-  enemy_spacing = (int)random(50,70);
+  //Enemies.add(new Cactai());
+  Enemies.add(new Bird(2));
+  enemy_spacing = (int)random(50, 70);
   next_enemy += enemy_spacing;
 }
