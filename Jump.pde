@@ -7,15 +7,20 @@ int horizon = 75; // Horizon line height (From Bottom)
 
 float enemy_speed = 5;  // Speed of enemies
 int enemy_spacing = 60; // frames between enemies
+int next_enemy = enemy_spacing;
 
-
+HUD hud;
 
 Player player;
 ArrayList<Enemy> Enemies = new ArrayList();
 
+float score = 0;
+float score_gain = .5; 
 
 void setup() {
   size(800, 300);
+
+  hud = new HUD();
 
   player = new Player();
   spawn_enemy();
@@ -23,13 +28,15 @@ void setup() {
 
 void draw() {
   background(bgColor);
-
+  hud.display();
+  
+  score += score_gain;
+  
   player.update();
   player.display();
 
   // Add enemy
-  println(Enemies.size());
-  if (frameCount % enemy_spacing == 0) {
+  if (frameCount - next_enemy == 0) {
     spawn_enemy();
   }
   for (int i = Enemies.size() - 1; i >= 0; i--) {
@@ -47,8 +54,8 @@ void draw() {
 
     //Check if the player has collided with the enemy
     if (temp.collition()) {
-      fill(0);
-      rect(0, 0, 10, 10);
+      reset();
+      
     }
 
     //Display enemy
@@ -59,6 +66,11 @@ void draw() {
   line(0, height - horizon, width, height - horizon);
 }
 
+void reset(){
+  Enemies.clear();
+  score = 0;
+}
+
 void keyPressed() {
   if (key == ' ') {
     player.jump();
@@ -66,4 +78,6 @@ void keyPressed() {
 }
 void spawn_enemy() {
   Enemies.add(new Cactai());
+  enemy_spacing = (int)random(50,70);
+  next_enemy += enemy_spacing;
 }
